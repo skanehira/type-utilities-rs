@@ -2,7 +2,7 @@
 use types_rs::omit;
 
 #[test]
-fn test() {
+fn should_pass_omit() {
     // omit partial field
     {
         mod foo {
