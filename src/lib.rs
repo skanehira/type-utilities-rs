@@ -1,10 +1,12 @@
 use proc_macro::TokenStream;
-use quote::{quote, ToTokens as _};
+use quote::quote;
 use std::collections::HashMap;
 use syn::{
     bracketed,
     parse::{Parse, ParseStream},
-    parse_macro_input, Ident, ItemStruct, Token,
+    parse_macro_input,
+    punctuated::Punctuated,
+    token, Field, Ident, ItemStruct, Token,
 };
 
 #[allow(dead_code)]
@@ -50,36 +52,34 @@ impl Parse for Omit {
 #[proc_macro_attribute]
 pub fn omit(attr: TokenStream, item: TokenStream) -> TokenStream {
     let attr = parse_macro_input!(attr as Omit);
-    let struct_name = attr.name;
+    let mut item = parse_macro_input!(item as ItemStruct);
 
-    let item = parse_macro_input!(item as ItemStruct);
+    item.ident = syn::Ident::new(&attr.name.to_string(), item.ident.span());
 
-    let fields: Vec<_> = item
-        .fields
-        .into_iter()
-        .filter_map(|field| {
-            if let Some(ref ident) = field.ident {
-                if attr.fields.contains_key(ident) {
-                    return None;
-                }
-            };
-            Some(field)
-        })
-        .collect();
+    let is_tuple = matches!(item.fields, syn::Fields::Unnamed(_));
 
-    let vis = item.vis.to_token_stream();
+    if !is_tuple {
+        let fields: Punctuated<Field, token::Comma> = item
+            .fields
+            .into_iter()
+            .filter(|field| {
+                if let Some(ref ident) = field.ident {
+                    if attr.fields.contains_key(ident) {
+                        return false;
+                    }
+                };
+                true
+            })
+            .collect();
 
-    if fields.is_empty() {
-        quote! {
-            #vis struct #struct_name;
-        }
-        .into()
-    } else {
-        quote! {
-            #vis struct #struct_name {
-                #(#fields),*
-            }
-        }
-        .into()
+        item.fields = syn::Fields::Named(syn::FieldsNamed {
+            brace_token: syn::token::Brace::default(),
+            named: fields,
+        });
     }
+
+    quote! {
+        #item
+    }
+    .into()
 }
