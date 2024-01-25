@@ -1,0 +1,52 @@
+name: Lint and Test
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+jobs:
+  lint:
+    name: lint
+    strategy:
+      matrix:
+        toolchain: [stable]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache toolchain
+        uses: Swatinem/rust-cache@v1
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+            toolchain: ${{ matrix.toolchain }}
+            override: true
+            components: rustfmt, clippy
+      - name: Lint
+        run: |
+          cargo clippy
+          cargo build
+  test:
+    name: test
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        toolchain: [stable]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache toolchain
+        uses: Swatinem/rust-cache@v1
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+            toolchain: ${{ matrix.toolchain }}
+            override: true
+      - name: Test
+        run: |
+          cargo test
