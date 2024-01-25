@@ -33,15 +33,12 @@ fn should_pass_omit() {
             a: i32,
             b: &'static str,
         }
-        _ = NewFoo3 {
-            a: 1,
-            b: "2",
-        };
+        _ = NewFoo3 { a: 1, b: "2" };
     }
 
     // omit unit struct
     {
-        #[omit(NewFoo4, [])]
+        #[omit(NewFoo4)]
         struct Foo;
         _ = NewFoo4;
     }

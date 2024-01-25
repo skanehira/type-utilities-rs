@@ -17,22 +17,31 @@ struct Omit {
 impl Parse for Omit {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         let name = input.parse()?;
+
+        let mut fields = HashMap::new();
+        if !input.peek(Token![,]) {
+            return Ok(Omit { name, fields });
+        }
+
         input.parse::<Token![,]>()?;
 
-        let fields = {
-            let content;
-            bracketed!(content in input);
+        let content;
+        bracketed!(content in input);
 
-            let mut fields = HashMap::new();
-            while !content.is_empty() {
-                fields.insert(content.parse()?, ());
-                if content.is_empty() {
-                    break;
-                }
-                content.parse::<Token![,]>()?;
+        while !content.is_empty() {
+            fields.insert(content.parse()?, ());
+            if content.is_empty() {
+                break;
             }
-            fields
-        };
+            content.parse::<Token![,]>()?;
+        }
+
+        if fields.is_empty() {
+            return Err(syn::Error::new(
+                content.span(),
+                "omit attribute must have at least one field",
+            ));
+        }
 
         Ok(Omit { name, fields })
     }
