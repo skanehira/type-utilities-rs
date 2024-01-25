@@ -5,12 +5,15 @@ use types_rs::omit;
 fn test() {
     // omit partial field
     {
-        #[omit(NewFoo, [b])]
-        struct Foo {
-            a: i32,
-            b: &str,
+        mod foo {
+            use super::*;
+            #[omit(NewFoo, [b])]
+            pub struct Foo {
+                pub a: i32,
+                pub b: &str,
+            }
         }
-        _ = NewFoo { a: 1 };
+        _ = foo::NewFoo { a: 1 };
     }
 
     // omit all fields

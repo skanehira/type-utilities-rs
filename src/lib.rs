@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use proc_macro::TokenStream;
-use quote::quote;
+use quote::{quote, ToTokens as _};
+use std::collections::HashMap;
 use syn::{
     bracketed,
     parse::{Parse, ParseStream},
@@ -45,6 +44,7 @@ pub fn omit(attr: TokenStream, item: TokenStream) -> TokenStream {
     let struct_name = attr.name;
 
     let item = parse_macro_input!(item as ItemStruct);
+
     let fields: Vec<_> = item
         .fields
         .into_iter()
@@ -58,14 +58,16 @@ pub fn omit(attr: TokenStream, item: TokenStream) -> TokenStream {
         })
         .collect();
 
+    let vis = item.vis.to_token_stream();
+
     if fields.is_empty() {
         quote! {
-            struct #struct_name;
+            #vis struct #struct_name;
         }
         .into()
     } else {
         quote! {
-            struct #struct_name {
+            #vis struct #struct_name {
                 #(#fields),*
             }
         }
