@@ -56,9 +56,9 @@ pub fn omit(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     item.ident = syn::Ident::new(&attr.name.to_string(), item.ident.span());
 
-    let is_tuple = matches!(item.fields, syn::Fields::Unnamed(_));
+    let is_tuple_or_unit = matches!(item.fields, syn::Fields::Unnamed(_) | syn::Fields::Unit);
 
-    if !is_tuple {
+    if !is_tuple_or_unit {
         let fields: Punctuated<Field, token::Comma> = item
             .fields
             .into_iter()

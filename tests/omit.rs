@@ -57,7 +57,7 @@ fn should_pass_omit() {
     {
         #[omit(NewS)]
         struct Unit;
-        _ = NewS {};
+        _ = NewS;
     }
 
     // omit generic struct
