@@ -7,18 +7,20 @@ use syn::{
 
 #[allow(dead_code)]
 #[derive(Debug)]
-pub(crate) struct Struct {
+pub(crate) struct Attribute {
+    /// New struct name
     pub(crate) name: Ident,
+    /// Specified fields in the attribute
     pub(crate) fields: HashMap<Ident, ()>,
 }
 
-impl Parse for Struct {
+impl Parse for Attribute {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         let name = input.parse()?;
 
         let mut fields = HashMap::new();
         if !input.peek(Token![,]) {
-            return Ok(Struct { name, fields });
+            return Ok(Attribute { name, fields });
         }
 
         input.parse::<Token![,]>()?;
@@ -34,13 +36,14 @@ impl Parse for Struct {
             content.parse::<Token![,]>()?;
         }
 
+        // TODO: This is for omit, pick attribute, should be remove
         if fields.is_empty() {
             return Err(syn::Error::new(
                 content.span(),
-                "omit attribute must have at least one field",
+                "Attribute must have at least one field",
             ));
         }
 
-        Ok(Struct { name, fields })
+        Ok(Attribute { name, fields })
     }
 }
