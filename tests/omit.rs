@@ -16,12 +16,12 @@ test!(keep_visible, {
 
 test!(omit_partial_field, {
     {
-        #[omit(NewS, [a, b])]
+        #[omit(NewS, [b])]
         struct S {
             a: i32,
             b: &str,
         }
-        _ = NewS {};
+        _ = NewS { a: 1 };
     }
 });
 
@@ -45,20 +45,20 @@ test!(skip_non_existent_field, {
 
 test!(omit_tuple_struct, {
     #[omit(NewPair)]
-    struct Pair(i32);
-    _ = NewPair(1);
+    struct Pair(i32, i64);
+    _ = NewPair(1, 10_i64);
 });
 
-test!(omit_tuple_struct_that_has_no_fields, {
-    #[omit(NewFoo4)]
+test!(omit_empty_tuple, {
+    #[omit(EmtpyPair)]
     struct Pair();
-    _ = NewFoo4();
+    _ = EmtpyPair();
 });
 
 test!(omit_unit_struct, {
-    #[omit(NewS)]
+    #[omit(NewUnit)]
     struct Unit;
-    _ = NewS;
+    _ = NewUnit;
 });
 
 test!(omit_generic_struct, {

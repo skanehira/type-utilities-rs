@@ -5,6 +5,12 @@ use syn::{
     Ident, Token,
 };
 
+#[derive(PartialEq, Eq, Clone)]
+pub(crate) enum AttributeType {
+    Omit,
+    Pick,
+}
+
 #[allow(dead_code)]
 #[derive(Debug)]
 pub(crate) struct Attribute {
@@ -36,7 +42,6 @@ impl Parse for Attribute {
             content.parse::<Token![,]>()?;
         }
 
-        // TODO: This is for omit, pick attribute, should be remove
         if fields.is_empty() {
             return Err(syn::Error::new(
                 content.span(),
