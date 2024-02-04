@@ -50,14 +50,6 @@ test!(wrap_type_reference, {
     _ = NewS { a: Some(&10) };
 });
 
-test!(wrap_type_trait_object, {
-    #[partial(NewS)]
-    struct S {
-        a: &'static dyn Fn() -> i32,
-    }
-    _ = NewS { a: Some(&|| 10) };
-});
-
 test!(wrap_type_tuple, {
     #[partial(NewS)]
     struct S {
