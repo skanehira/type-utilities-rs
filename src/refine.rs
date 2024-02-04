@@ -12,7 +12,7 @@ pub(super) fn omit_or_pick(
 
     // If the attribute is Omit or Pick, and the struct is not a tuple or unit, then we filter the fields
     if (matches!(attr_type, AttributeType::Omit | AttributeType::Pick)) && !is_tuple_or_unit {
-        let fields: Punctuated<Field, token::Comma> = item
+        let fields = item
             .fields
             .clone()
             .into_iter()
