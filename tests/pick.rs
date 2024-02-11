@@ -2,7 +2,7 @@
 mod utils;
 use types_rs::pick;
 
-test!(omit_partial_field, {
+test!(pick_partial_field, {
     {
         #[pick(NewS, [a])]
         struct S {
