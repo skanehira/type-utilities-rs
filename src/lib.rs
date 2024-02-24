@@ -1,7 +1,7 @@
 mod attribute;
 mod refine;
 
-use attribute::Attribute;
+use attribute::StructAttribute;
 use proc_macro::TokenStream;
 use quote::quote;
 use refine::{into_optional, into_required, omit_or_pick};
@@ -38,7 +38,7 @@ use syn::{parse_macro_input, ItemStruct};
 /// ```
 #[proc_macro_attribute]
 pub fn omit(attr: TokenStream, item: TokenStream) -> TokenStream {
-    let attr = parse_macro_input!(attr as Attribute);
+    let attr = parse_macro_input!(attr as StructAttribute);
     let item = parse_macro_input!(item as ItemStruct);
 
     let item = omit_or_pick(attr, item, attribute::AttributeType::Omit);
@@ -81,7 +81,7 @@ pub fn omit(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// ```
 #[proc_macro_attribute]
 pub fn pick(attr: TokenStream, item: TokenStream) -> TokenStream {
-    let attr = parse_macro_input!(attr as Attribute);
+    let attr = parse_macro_input!(attr as StructAttribute);
     let item = parse_macro_input!(item as ItemStruct);
 
     let item = omit_or_pick(attr, item, attribute::AttributeType::Pick);
@@ -124,7 +124,7 @@ pub fn pick(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// ```
 #[proc_macro_attribute]
 pub fn partial(attr: TokenStream, item: TokenStream) -> TokenStream {
-    let attr = parse_macro_input!(attr as Attribute);
+    let attr = parse_macro_input!(attr as StructAttribute);
     let mut item = parse_macro_input!(item as ItemStruct);
 
     item.ident = syn::Ident::new(&attr.name.to_string(), item.ident.span());
@@ -160,7 +160,7 @@ pub fn partial(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// ```
 #[proc_macro_attribute]
 pub fn required(attr: TokenStream, item: TokenStream) -> TokenStream {
-    let attr = parse_macro_input!(attr as Attribute);
+    let attr = parse_macro_input!(attr as StructAttribute);
     let mut item = parse_macro_input!(item as ItemStruct);
 
     item.ident = syn::Ident::new(&attr.name.to_string(), item.ident.span());

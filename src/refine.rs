@@ -1,9 +1,9 @@
-use crate::attribute::{Attribute, AttributeType};
+use crate::attribute::{StructAttribute, AttributeType};
 use quote::quote;
 use syn::{Field, GenericArgument, ItemStruct, PathArguments, PathSegment, Type};
 
 pub(super) fn omit_or_pick(
-    attr: Attribute,
+    attr: StructAttribute,
     mut item: ItemStruct,
     attr_type: AttributeType,
 ) -> ItemStruct {

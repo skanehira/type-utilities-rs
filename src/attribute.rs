@@ -13,20 +13,20 @@ pub(crate) enum AttributeType {
 
 #[allow(dead_code)]
 #[derive(Debug)]
-pub(crate) struct Attribute {
+pub(crate) struct StructAttribute {
     /// New struct name
     pub(crate) name: Ident,
     /// Specified fields in the attribute
     pub(crate) fields: HashMap<Ident, ()>,
 }
 
-impl Parse for Attribute {
+impl Parse for StructAttribute {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         let name = input.parse()?;
 
         let mut fields = HashMap::new();
         if !input.peek(Token![,]) {
-            return Ok(Attribute { name, fields });
+            return Ok(StructAttribute { name, fields });
         }
 
         input.parse::<Token![,]>()?;
@@ -49,6 +49,6 @@ impl Parse for Attribute {
             ));
         }
 
-        Ok(Attribute { name, fields })
+        Ok(StructAttribute { name, fields })
     }
 }
