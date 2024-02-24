@@ -4,7 +4,7 @@ mod refine;
 use attribute::Attribute;
 use proc_macro::TokenStream;
 use quote::quote;
-use refine::{into_optional, omit_or_pick};
+use refine::{into_optional, into_required, omit_or_pick};
 use syn::{parse_macro_input, ItemStruct};
 
 /// Create new Struct that omit the specified fields
@@ -109,7 +109,7 @@ pub fn pick(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// let _ = NewS { a: Some(1), b: Some("hello"), c: Some(1.5) };
 /// ```
 ///
-/// When the field is already is [`Option`], it's no effect
+/// When the field already is [`Option`], it's no effect
 ///
 /// ```
 /// use type_utilities_rs::partial;
@@ -130,6 +130,42 @@ pub fn partial(attr: TokenStream, item: TokenStream) -> TokenStream {
     item.ident = syn::Ident::new(&attr.name.to_string(), item.ident.span());
 
     let fields = item.fields.into_iter().map(into_optional).collect();
+    item.fields = syn::Fields::Named(syn::FieldsNamed {
+        brace_token: syn::token::Brace::default(),
+        named: fields,
+    });
+
+    quote! {
+        #item
+    }
+    .into()
+}
+
+/// Unwrap all fields from [`Option`] type
+/// # Examples
+/// ```
+/// use type_utilities_rs::required;
+///
+/// // Create a new struct `NewS` with all fields optional
+/// #[required(NewS)]
+/// struct S<'a> {
+///   a: Option<i32>,
+///   b: Option<&'a str>,
+///   c: f64,
+/// }
+///
+/// // `NewS` will have all fields.
+/// // When the field is not [`Option`], it's no effect
+/// let _ = NewS { a: 1, b: "hello", c: 1.5 };
+/// ```
+#[proc_macro_attribute]
+pub fn required(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let attr = parse_macro_input!(attr as Attribute);
+    let mut item = parse_macro_input!(item as ItemStruct);
+
+    item.ident = syn::Ident::new(&attr.name.to_string(), item.ident.span());
+
+    let fields = item.fields.into_iter().map(into_required).collect();
     item.fields = syn::Fields::Named(syn::FieldsNamed {
         brace_token: syn::token::Brace::default(),
         named: fields,

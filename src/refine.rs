@@ -1,6 +1,6 @@
 use crate::attribute::{Attribute, AttributeType};
 use quote::quote;
-use syn::{Field, ItemStruct, Type};
+use syn::{Field, GenericArgument, ItemStruct, PathArguments, PathSegment, Type};
 
 pub(super) fn omit_or_pick(
     attr: Attribute,
@@ -68,5 +68,28 @@ pub(super) fn into_optional(mut field: Field) -> Field {
     };
 
     field.ty = ty;
+    field
+}
+
+fn get_ty_inner_option(segment: &PathSegment) -> Option<Type> {
+    if let PathArguments::AngleBracketed(ref args) = segment.arguments {
+        if let Some(GenericArgument::Type(ty)) = args.args.first() {
+            return Some(ty.clone());
+        }
+    }
+    None
+}
+
+pub(super) fn into_required(mut field: Field) -> Field {
+    if let Type::Path(ref type_path) = field.ty {
+        // when type is Option<T>, do nothing
+        if let Some(seg) = type_path.path.segments.first() {
+            if seg.ident == "Option" {
+                if let Some(ty) = get_ty_inner_option(seg) {
+                    field.ty = ty;
+                }
+            }
+        }
+    }
     field
 }

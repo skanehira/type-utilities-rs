@@ -97,3 +97,23 @@ struct S {
 
 let _ = NewS { a: Some(1), b: Some(1.1) };
 ```
+
+## Required
+
+Unwrap all fields from `Option` type
+
+```rs
+use type_utilities_rs::required;
+
+// Create a new struct `NewS` with all fields optional
+#[required(NewS)]
+struct S<'a> {
+  a: Option<i32>,
+  b: Option<&'a str>,
+  c: f64,
+}
+
+// `NewS` will have all fields.
+// When the field is not [`Option`], it's no effect
+let _ = NewS { a: 1, b: "hello", c: 1.5 };
+```
