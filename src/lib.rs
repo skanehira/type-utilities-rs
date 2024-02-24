@@ -11,7 +11,7 @@ use syn::{parse_macro_input, ItemStruct};
 /// # Examples
 ///
 /// ```
-/// use types_rs::omit;
+/// use type_utilities_rs::omit;
 ///
 /// // Create a new struct `NewS` with omitted field `b`
 /// #[omit(NewS, [b])]
@@ -26,7 +26,7 @@ use syn::{parse_macro_input, ItemStruct};
 /// When the fields dosn't specified, it will be same as the original struct
 ///
 /// ```
-/// use types_rs::omit;
+/// use type_utilities_rs::omit;
 ///
 /// #[omit(NewS)]
 /// struct S<'a> {
@@ -52,7 +52,7 @@ pub fn omit(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// Create new struct that pick the specified fields
 /// # Examples
 /// ```
-/// use types_rs::pick;
+/// use type_utilities_rs::pick;
 ///
 /// // Create a new struct `NewS` with picked field `b`
 /// #[pick(NewS, [b])]
@@ -68,7 +68,7 @@ pub fn omit(attr: TokenStream, item: TokenStream) -> TokenStream {
 ///
 /// When the fields dosn't specified, it will be empty struct
 /// ```
-/// use types_rs::pick;
+/// use type_utilities_rs::pick;
 ///
 /// #[pick(NewS)]
 /// struct S {
@@ -95,7 +95,7 @@ pub fn pick(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// Change all fields to [`Option`] type
 /// # Examples
 /// ```
-/// use types_rs::partial;
+/// use type_utilities_rs::partial;
 ///
 /// // Create a new struct `NewS` with all fields optional
 /// #[partial(NewS)]
@@ -112,7 +112,7 @@ pub fn pick(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// When the field is already is [`Option`], it's no effect
 ///
 /// ```
-/// use types_rs::partial;
+/// use type_utilities_rs::partial;
 ///
 /// #[partial(NewS)]
 /// struct S {

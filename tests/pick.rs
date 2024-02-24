@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 mod utils;
-use types_rs::pick;
+use type_utilities_rs::pick;
 
 test!(pick_partial_field, {
     {

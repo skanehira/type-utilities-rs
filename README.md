@@ -6,7 +6,7 @@ Type utilities in Rust.
 Create new Struct that omit the specified fields
 
 ```rust
-use types_rs::omit;
+use type_utilities_rs::omit;
 
 // Create a new struct `NewS` with omitted field `b`
 #[omit(NewS, [b])]
@@ -21,7 +21,7 @@ let _ = NewS { a: 1 };
 When the fields dosn't specified, it will be same as the original struct
 
 ```rust
-use types_rs::omit;
+use type_utilities_rs::omit;
 
 #[omit(NewS)]
 struct S<'a> {
@@ -36,7 +36,7 @@ let _ = NewS { a: 1, b: "hello" };
 Create new struct that pick the specified fields
 
 ```rust
-use types_rs::pick;
+use type_utilities_rs::pick;
 
 // Create a new struct `NewS` with picked field `b`
 #[pick(NewS, [b])]
@@ -53,7 +53,7 @@ let _ = NewS { b: "hello" };
 When the fields dosn't specified, it will be empty struct
 
 ```rust
-use types_rs::pick;
+use type_utilities_rs::pick;
 
 #[pick(NewS)]
 struct S {
@@ -70,7 +70,7 @@ let _ = NewS {};
 Change all fields to `Option` type
 
 ```rust
-use types_rs::partial;
+use type_utilities_rs::partial;
 
 // Create a new struct `NewS` with all fields optional
 #[partial(NewS)]
@@ -87,7 +87,7 @@ let _ = NewS { a: Some(1), b: Some("hello"), c: Some(1.5) };
 When the field is already is `Option`, it's no effect
 
 ```rust
-use types_rs::partial;
+use type_utilities_rs::partial;
 
 #[partial(NewS)]
 struct S {

@@ -32,7 +32,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "types-rs"
+name = "type-utilities-rs"
 version = "0.1.0"
 dependencies = [
  "proc-macro2",

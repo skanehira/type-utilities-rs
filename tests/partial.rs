@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 mod utils;
-use types_rs::partial;
+use type_utilities_rs::partial;
 
 test!(ignore_option, {
     #[partial(NewS)]

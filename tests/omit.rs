@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 mod utils;
-use types_rs::omit;
+use type_utilities_rs::omit;
 
 test!(keep_visible, {
     mod x {
