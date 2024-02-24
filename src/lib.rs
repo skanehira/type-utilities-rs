@@ -17,7 +17,7 @@ use syn::{parse_macro_input, ItemStruct};
 /// #[omit(NewS, [b])]
 /// struct S {
 ///     a: i32,
-///     b: &str,
+///     b: &'static str,
 /// }
 /// // `NewS` will only have field `a`
 /// let _ = NewS { a: 1 };
@@ -41,10 +41,12 @@ pub fn omit(attr: TokenStream, item: TokenStream) -> TokenStream {
     let attr = parse_macro_input!(attr as StructAttribute);
     let item = parse_macro_input!(item as ItemStruct);
 
-    let item = omit_or_pick(attr, item, attribute::AttributeType::Omit);
+    let new_item = omit_or_pick(attr, item.clone(), attribute::AttributeType::Omit);
 
     quote! {
         #item
+
+        #new_item
     }
     .into()
 }
@@ -84,10 +86,12 @@ pub fn pick(attr: TokenStream, item: TokenStream) -> TokenStream {
     let attr = parse_macro_input!(attr as StructAttribute);
     let item = parse_macro_input!(item as ItemStruct);
 
-    let item = omit_or_pick(attr, item, attribute::AttributeType::Pick);
+    let new_item = omit_or_pick(attr, item.clone(), attribute::AttributeType::Pick);
 
     quote! {
         #item
+
+        #new_item
     }
     .into()
 }
@@ -125,18 +129,22 @@ pub fn pick(attr: TokenStream, item: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn partial(attr: TokenStream, item: TokenStream) -> TokenStream {
     let attr = parse_macro_input!(attr as StructAttribute);
-    let mut item = parse_macro_input!(item as ItemStruct);
+    let item = parse_macro_input!(item as ItemStruct);
 
-    item.ident = syn::Ident::new(&attr.name.to_string(), item.ident.span());
+    let mut new_item = item.clone();
 
-    let fields = item.fields.into_iter().map(into_optional).collect();
-    item.fields = syn::Fields::Named(syn::FieldsNamed {
+    new_item.ident = syn::Ident::new(&attr.name.to_string(), new_item.ident.span());
+
+    let fields = new_item.fields.into_iter().map(into_optional).collect();
+    new_item.fields = syn::Fields::Named(syn::FieldsNamed {
         brace_token: syn::token::Brace::default(),
         named: fields,
     });
 
     quote! {
         #item
+
+        #new_item
     }
     .into()
 }
@@ -161,18 +169,22 @@ pub fn partial(attr: TokenStream, item: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn required(attr: TokenStream, item: TokenStream) -> TokenStream {
     let attr = parse_macro_input!(attr as StructAttribute);
-    let mut item = parse_macro_input!(item as ItemStruct);
+    let item = parse_macro_input!(item as ItemStruct);
 
-    item.ident = syn::Ident::new(&attr.name.to_string(), item.ident.span());
+    let mut new_item = item.clone();
 
-    let fields = item.fields.into_iter().map(into_required).collect();
-    item.fields = syn::Fields::Named(syn::FieldsNamed {
+    new_item.ident = syn::Ident::new(&attr.name.to_string(), new_item.ident.span());
+
+    let fields = new_item.fields.into_iter().map(into_required).collect();
+    new_item.fields = syn::Fields::Named(syn::FieldsNamed {
         brace_token: syn::token::Brace::default(),
         named: fields,
     });
 
     quote! {
         #item
+
+        #new_item
     }
     .into()
 }

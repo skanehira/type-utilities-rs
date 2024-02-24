@@ -7,6 +7,7 @@ test!(ignore_option, {
     struct S {
         a: Option<i32>,
     }
+    _ = S { a: Some(11) };
     _ = NewS { a: Some(20) };
 });
 
@@ -55,5 +56,7 @@ test!(wrap_type_tuple, {
     struct S {
         a: (i32, f32),
     }
-    _ = NewS { a: Some((10, std::f32::consts::PI)) };
+    _ = NewS {
+        a: Some((10, std::f32::consts::PI)),
+    };
 });

@@ -8,9 +8,10 @@ test!(keep_visible, {
         #[omit(NewS, [b])]
         pub struct S {
             pub a: i32,
-            pub b: &str,
+            pub b: i64,
         }
     }
+    _ = x::S { a: 2, b: 1 };
     _ = x::NewS { a: 1 };
 });
 
@@ -19,7 +20,7 @@ test!(omit_partial_field, {
         #[omit(NewS, [b])]
         struct S {
             a: i32,
-            b: &str,
+            b: &'static str,
         }
         _ = NewS { a: 1 };
     }
@@ -29,7 +30,7 @@ test!(omit_all_files, {
     #[omit(NewS, [a, b])]
     struct S {
         a: i32,
-        b: &str,
+        b: &'static str,
     }
     _ = NewS {};
 });

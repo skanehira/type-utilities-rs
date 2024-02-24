@@ -7,8 +7,9 @@ test!(pick_partial_field, {
         #[pick(NewS, [a])]
         struct S {
             a: i32,
-            b: &str,
+            b: &'static str,
         }
+        _ = S { a: 10, b: "hello" };
         _ = NewS { a: 1 };
     }
 });
