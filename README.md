@@ -1,4 +1,4 @@
-# types-rs
+# type-utilities-rs
 Type utilities in Rust.
 
 ## Omit
