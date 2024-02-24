@@ -11,7 +11,6 @@ pub(crate) enum AttributeType {
     Pick,
 }
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub(crate) struct StructAttribute {
     /// New struct name
